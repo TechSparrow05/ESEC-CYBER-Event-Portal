@@ -4,12 +4,12 @@
   "private": true,
   "description": "Enterprise College Event Portal for Erode Sengunthar Engineering College (ESEC)",
   "scripts": {
-    "install:all": "npm install --prefix client && npm install --prefix server",
-    "dev:client": "npm run dev --prefix client",
-    "dev:server": "npm run dev --prefix server",
-    "build:client": "npm run build --prefix client",
-    "build:server": "npm run build --prefix server",
-    "build": "npm run build:client && npm run build:server"
+    "install:all": "npm --prefix client install && npm --prefix server install",
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run dev",
+    "build:client": "npm --prefix client install && npm --prefix client run build",
+    "build:server": "npm --prefix server install && npm --prefix server run build",
+    "build": "npm --prefix client install && npm --prefix client run build"
   },
   "keywords": [
     "vite",
