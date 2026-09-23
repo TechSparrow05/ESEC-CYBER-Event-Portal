@@ -9,15 +9,24 @@ import {
   Menu, 
   X, 
   UserCheck,
-  ChevronRight
+  ChevronRight,
+  LogIn,
+  LogOut,
+  Copy,
+  Check,
+  Shuffle,
+  ChevronDown
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useRegistration } from '../../context/RegistrationContext';
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [copiedUid, setCopiedUid] = useState(false);
+
   const location = useLocation();
-  const { profile } = useAuth();
+  const { profile, openLoginModal, logout } = useAuth();
   const { cartTotal, itemCount } = useRegistration();
 
   const navLinks = [
@@ -31,6 +40,15 @@ export const Navbar: React.FC = () => {
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);
+  };
+
+  const handleCopyUid = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (profile?.participantId) {
+      navigator.clipboard.writeText(profile.participantId);
+      setCopiedUid(true);
+      setTimeout(() => setCopiedUid(false), 2000);
+    }
   };
 
   return (
@@ -89,16 +107,103 @@ export const Navbar: React.FC = () => {
             })}
           </nav>
 
-          {/* Right Section: Participant UID & Register CTA */}
+          {/* Right Section: Participant UID Dropdown & Sign In / Register CTA */}
           <div className="hidden md:flex items-center gap-2 sm:gap-3.5 shrink-0">
-            {profile && (
-              <div className="hidden xl:flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-brand-surface border border-brand-border text-xs">
-                <UserCheck className="w-3.5 h-3.5 text-brand-cyan shrink-0" />
-                <span className="text-brand-muted">UID:</span>
-                <span className="font-mono font-bold text-white tracking-wider">
-                  {profile.participantId}
-                </span>
+            {profile ? (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-brand-surface border border-brand-border hover:border-brand-border/90 text-xs transition-all group"
+                >
+                  <div className="w-6 h-6 rounded-lg bg-gradient-brand flex items-center justify-center text-[11px] font-bold text-white uppercase">
+                    {profile.fullName.charAt(0)}
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="font-bold text-white text-[11px] max-w-[120px] truncate">
+                      {profile.fullName}
+                    </span>
+                    <span className="font-mono text-[10px] text-brand-cyan">
+                      {profile.participantId}
+                    </span>
+                  </div>
+                  <ChevronDown className="w-3.5 h-3.5 text-brand-muted group-hover:text-white transition-transform" />
+                </button>
+
+                {/* Profile Dropdown Menu */}
+                {userDropdownOpen && (
+                  <div 
+                    className="absolute right-0 mt-2 w-72 glass-panel rounded-2xl border border-brand-border/80 shadow-2xl p-3 bg-brand-surface/95 z-50 animate-fadeIn"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="p-3 rounded-xl bg-brand-dark/80 border border-brand-border mb-2.5">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[10px] uppercase font-bold text-brand-muted tracking-wider">
+                          Active Participant
+                        </span>
+                        <button
+                          type="button"
+                          onClick={handleCopyUid}
+                          className="flex items-center gap-1 text-[10px] text-brand-cyan hover:underline"
+                        >
+                          {copiedUid ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                          <span>{copiedUid ? 'Copied!' : 'Copy UID'}</span>
+                        </button>
+                      </div>
+                      <p className="font-mono font-black text-sm text-white tracking-wider">
+                        {profile.participantId}
+                      </p>
+                      <p className="text-xs font-semibold text-white mt-1">{profile.fullName}</p>
+                      <p className="text-[11px] text-brand-muted truncate">{profile.college}</p>
+                      <p className="text-[10px] text-brand-muted truncate">{profile.department} • {profile.yearOfStudy}</p>
+                    </div>
+
+                    <div className="space-y-1">
+                      <Link
+                        to="/invoice/latest"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-xs font-medium text-white hover:bg-white/5 transition-colors"
+                      >
+                        <Receipt className="w-4 h-4 text-brand-cyan" />
+                        <span>My Event Receipt</span>
+                      </Link>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          openLoginModal();
+                        }}
+                        className="flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-xs font-medium text-white hover:bg-white/5 transition-colors"
+                      >
+                        <Shuffle className="w-4 h-4 text-brand-indigo" />
+                        <span>Switch Participant / UID</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          logout();
+                        }}
+                        className="flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-xs font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Log Out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
+            ) : (
+              <button
+                type="button"
+                onClick={openLoginModal}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-brand-cyan border border-brand-cyan/40 bg-brand-cyan/10 hover:bg-brand-cyan/20 transition-all"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Sign In</span>
+              </button>
             )}
 
             <Link
@@ -112,6 +217,12 @@ export const Navbar: React.FC = () => {
 
           {/* Mobile Right Bar: Quick Cart & Menu Toggle */}
           <div className="flex lg:hidden items-center gap-2">
+            <button
+              onClick={openLoginModal}
+              className="px-2.5 py-1.5 rounded-lg text-[11px] font-mono font-bold text-brand-cyan bg-brand-surface border border-brand-border"
+            >
+              {profile ? profile.participantId.replace('EVT-2026-', '#') : 'Sign In'}
+            </button>
             <Link
               to="/register"
               className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-brand-indigo shrink-0"
@@ -133,12 +244,43 @@ export const Navbar: React.FC = () => {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="lg:hidden glass-panel border-b border-brand-border/80 px-4 pt-3 pb-6 space-y-3 animate-fadeIn">
-          {profile && (
-            <div className="flex items-center justify-between p-3 rounded-xl bg-brand-surface border border-brand-border">
-              <span className="text-xs text-brand-muted">Participant ID:</span>
-              <span className="font-mono text-xs font-bold text-brand-cyan">{profile.participantId}</span>
+          {profile ? (
+            <div className="p-3 rounded-xl bg-brand-surface border border-brand-border space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-brand-muted">Participant ID:</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs font-bold text-brand-cyan">{profile.participantId}</span>
+                  <button onClick={handleCopyUid} className="text-brand-muted hover:text-white">
+                    {copiedUid ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-xs pt-1 border-t border-brand-border/60">
+                <span className="text-white font-medium">{profile.fullName}</span>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    openLoginModal();
+                  }}
+                  className="text-brand-cyan hover:underline text-[11px]"
+                >
+                  Switch UID
+                </button>
+              </div>
             </div>
+          ) : (
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openLoginModal();
+              }}
+              className="w-full py-2.5 rounded-xl border border-brand-cyan/40 bg-brand-cyan/10 text-brand-cyan font-semibold text-xs flex items-center justify-center gap-2"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Sign In with UID or Register</span>
+            </button>
           )}
+
           <div className="grid grid-cols-1 gap-1">
             {navLinks.map((link) => {
               const Icon = link.icon;

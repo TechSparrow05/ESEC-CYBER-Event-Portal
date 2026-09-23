@@ -4,6 +4,7 @@ import { config } from './config';
 import paymentRoutes from './routes/paymentRoutes';
 import teamRoutes from './routes/teamRoutes';
 import healthRoutes from './routes/healthRoutes';
+import authRoutes from './routes/authRoutes';
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.get('/mock-storage/*', (req: Request, res: Response) => {
 
 // API Routes
 app.use('/api', healthRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/teams', teamRoutes);
 

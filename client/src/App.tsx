@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { RegistrationProvider } from './context/RegistrationContext';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
+import { LoginModal } from './components/auth/LoginModal';
 import { Home } from './pages/Home';
 import { Events } from './pages/Events';
 import { Register } from './pages/Register';
@@ -17,6 +18,7 @@ export const App: React.FC = () => {
         <RegistrationProvider>
           <div className="flex flex-col min-h-screen w-full bg-brand-dark text-white selection:bg-brand-indigo selection:text-white overflow-x-hidden">
             <Navbar />
+            <LoginModal />
             <main className="flex-1 w-full flex flex-col">
               <Routes>
                 <Route path="/" element={<Home />} />

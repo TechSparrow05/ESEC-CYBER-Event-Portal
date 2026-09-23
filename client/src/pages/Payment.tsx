@@ -14,7 +14,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { useAuth } from '../context/AuthContext';
+import { useAuth, generateShuffledUID } from '../context/AuthContext';
 import { useRegistration } from '../context/RegistrationContext';
 import { apiClient } from '../services/api';
 import { Badge } from '../components/common/Badge';
@@ -130,10 +130,10 @@ export const Payment: React.FC = () => {
       const receipt: PaymentReceipt = {
         paymentId,
         registrationId,
-        participantId: profile?.participantId || 'EVT-2026-1042',
-        participantName: profile?.fullName || 'Aravind Krishnan',
-        participantEmail: profile?.email || 'aravind.k@esec.ac.in',
-        participantPhone: profile?.phone || '+91 98421 54321',
+        participantId: profile?.participantId || generateShuffledUID(),
+        participantName: profile?.fullName || 'Participant',
+        participantEmail: profile?.email || 'participant@esec.ac.in',
+        participantPhone: profile?.phone || '',
         collegeName: profile?.college || 'Erode Sengunthar Engineering College',
         upiRefId: upiRefId.trim(),
         amount: totalAmount,

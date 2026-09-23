@@ -28,7 +28,7 @@ import { UserRole } from '../types';
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
-  const { profile, updateProfile } = useAuth();
+  const { profile, updateProfile, openLoginModal } = useAuth();
   const { 
     roleType, 
     setRoleType, 
@@ -190,15 +190,24 @@ export const Register: React.FC = () => {
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs font-semibold text-brand-muted">Sequential Unique Participant Identifier</p>
+                <p className="text-xs font-semibold text-brand-muted">Unique Shuffled Participant UID</p>
                 <p className="text-lg font-mono font-black text-white tracking-widest">
-                  {profile?.participantId || 'EVT-2026-1042'}
+                  {profile?.participantId || 'EVT-2026-XXXX'}
                 </p>
               </div>
             </div>
-            <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 self-start sm:self-auto">
-              Auto-Allocated
-            </span>
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={openLoginModal}
+                className="text-xs px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-brand-border text-brand-cyan font-medium transition-all"
+              >
+                Switch UID / Login
+              </button>
+              <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                Primary Key
+              </span>
+            </div>
           </div>
 
           {/* Role Type Selection: Leader vs Member vs Solo */}

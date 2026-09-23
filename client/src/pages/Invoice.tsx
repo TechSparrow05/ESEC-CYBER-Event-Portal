@@ -20,9 +20,11 @@ import { PaymentReceipt } from '../types';
 import { apiClient } from '../services/api';
 import { generatePdfReceipt } from '../utils/pdfReceipt';
 import { Badge } from '../components/common/Badge';
+import { useAuth, generateShuffledUID } from '../context/AuthContext';
 
 export const Invoice: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { profile } = useAuth();
   const [receipt, setReceipt] = useState<PaymentReceipt | null>(null);
   const [copiedUtr, setCopiedUtr] = useState(false);
 
@@ -36,11 +38,11 @@ export const Invoice: React.FC = () => {
       const mockReceipt: PaymentReceipt = {
         paymentId: 'PAY-2026-98124',
         registrationId: 'REG-2026-0042',
-        participantId: 'EVT-2026-1042',
-        participantName: 'Aravind Krishnan',
-        participantEmail: 'aravind.k@esec.ac.in',
-        participantPhone: '+91 98421 54321',
-        collegeName: 'Erode Sengunthar Engineering College',
+        participantId: profile?.participantId || generateShuffledUID(),
+        participantName: profile?.fullName || 'Participant',
+        participantEmail: profile?.email || 'participant@esec.ac.in',
+        participantPhone: profile?.phone || '+91 98421 54321',
+        collegeName: profile?.college || 'Erode Sengunthar Engineering College',
         upiRefId: '426819203814',
         amount: 250,
         vpa: 'esecfest2026@okaxis',

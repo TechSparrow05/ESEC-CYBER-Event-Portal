@@ -21,12 +21,34 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Function & Trigger to auto-generate sequential participant ID
+-- Function & Trigger to auto-generate shuffled, unique participant ID (e.g. EVT-2026-1042, EVT-2026-8491)
 CREATE OR REPLACE FUNCTION public.generate_participant_id()
 RETURNS TRIGGER AS $$
+DECLARE
+    candidate_id TEXT;
+    is_taken BOOLEAN;
+    attempts INT := 0;
 BEGIN
     IF NEW.participant_id IS NULL OR NEW.participant_id = '' THEN
-        NEW.participant_id := 'EVT-2026-' || LPAD(nextval('participant_id_seq')::text, 4, '0');
+        LOOP
+            attempts := attempts + 1;
+            -- Generate randomized 4-digit integer between 1000 and 9999 for shuffled distribution
+            candidate_id := 'EVT-2026-' || (1000 + floor(random() * 9000))::text;
+            
+            -- Check if already assigned
+            SELECT EXISTS(SELECT 1 FROM public.profiles WHERE participant_id = candidate_id) INTO is_taken;
+            
+            IF NOT is_taken THEN
+                NEW.participant_id := candidate_id;
+                EXIT;
+            END IF;
+
+            -- Safety exit after 100 attempts fallback to sequence
+            IF attempts > 100 THEN
+                NEW.participant_id := 'EVT-2026-' || LPAD(nextval('participant_id_seq')::text, 4, '0');
+                EXIT;
+            END IF;
+        END LOOP;
     END IF;
     RETURN NEW;
 END;
