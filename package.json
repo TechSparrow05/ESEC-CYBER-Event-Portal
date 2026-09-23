@@ -1,0 +1,26 @@
+{
+  "name": "college-event-esec-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Enterprise College Event Portal for Erode Sengunthar Engineering College (ESEC)",
+  "scripts": {
+    "install:all": "npm install --prefix client && npm install --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "dev:server": "npm run dev --prefix server",
+    "build:client": "npm run build --prefix client",
+    "build:server": "npm run build --prefix server",
+    "build": "npm run build:client && npm run build:server"
+  },
+  "keywords": [
+    "vite",
+    "react",
+    "typescript",
+    "tailwind",
+    "nodejs",
+    "supabase",
+    "gcs",
+    "college-event"
+  ],
+  "author": "Antigravity Engineering",
+  "license": "ISC"
+}
