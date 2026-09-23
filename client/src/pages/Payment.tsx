@@ -7,13 +7,11 @@ import {
   Check, 
   UploadCloud, 
   AlertCircle, 
-  CheckCircle2, 
-  ShieldCheck, 
   Lock,
   ArrowRight,
   FileImage,
   Loader2,
-  Sparkles
+  ShieldCheck
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useAuth } from '../context/AuthContext';
@@ -35,7 +33,7 @@ export const Payment: React.FC = () => {
 
   const collegeVpa = 'esecfest2026@okaxis';
   const payeeName = 'ESEC College Fest 2026';
-  const totalAmount = cartTotal > 0 ? cartTotal : 250; // default minimum fee if direct navigated
+  const totalAmount = cartTotal > 0 ? cartTotal : 250;
 
   // State
   const [copiedVpa, setCopiedVpa] = useState(false);
@@ -46,7 +44,6 @@ export const Payment: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [uploadStatusText, setUploadStatusText] = useState<string>('');
 
-  // UPI deep-link URL for QR Code
   const upiIntentUrl = `upi://pay?pa=${collegeVpa}&pn=${encodeURIComponent(payeeName)}&am=${totalAmount}&cu=INR&tn=${encodeURIComponent(`Reg_${profile?.participantId || 'EVT'}`)}`;
 
   const handleCopyVpa = () => {
@@ -92,14 +89,12 @@ export const Payment: React.FC = () => {
     e.preventDefault();
     setErrorMessage(null);
 
-    // 1. Strict 12-digit format check
     const utrRegex = /^[0-9]{12}$/;
     if (!utrRegex.test(upiRefId.trim())) {
       setErrorMessage('Validation Error: UPI Reference ID (UTR) must be an exact 12-digit numeric number.');
       return;
     }
 
-    // 2. Screenshot check
     if (!selectedFile) {
       setErrorMessage('Missing Screenshot: Please upload a proof of payment screenshot.');
       return;
@@ -152,10 +147,8 @@ export const Payment: React.FC = () => {
         teamCode: teamCode || undefined
       };
 
-      // Save locally for instant reliable retrieval on /invoice/:id
       apiClient.saveReceiptLocal(receipt);
 
-      // Trigger celebratory confetti
       confetti({
         particleCount: 100,
         spread: 70,
@@ -175,56 +168,48 @@ export const Payment: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto space-y-8 animate-fadeIn">
+    <div className="min-h-screen py-8 sm:py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-6 sm:space-y-8 animate-fadeIn">
       
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto">
         <Badge variant="cyan" size="sm" className="mb-2">PAYMENT GATEWAY</Badge>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white">UPI Settlement & Verification</h1>
-        <p className="text-xs sm:text-sm text-brand-muted mt-1">
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-white">UPI Settlement & Verification</h1>
+        <p className="text-xs sm:text-sm text-brand-muted mt-1 px-2">
           Scan the college dynamic UPI QR code, submit your 12-digit UTR, and upload the proof screenshot for instant automated clearance.
         </p>
       </div>
 
-      {/* Main Grid: QR Code & VPA on Left, UTR & Upload on Right */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+      {/* Main Grid: Screen-adaptive flex/grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         
-        {/* Left Column: QR Code & VPA Box (5 cols) */}
-        <div className="md:col-span-5 glass-panel rounded-3xl p-6 border border-brand-border/80 flex flex-col items-center text-center justify-between space-y-6">
+        {/* Left Column: QR Code & VPA Box */}
+        <div className="lg:col-span-5 glass-panel rounded-3xl p-5 sm:p-6 border border-brand-border/80 flex flex-col items-center text-center justify-between space-y-5 sm:space-y-6">
           
           <div className="w-full">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-mono text-brand-muted font-semibold">Official College UPI</span>
-              <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+              <span className="text-[11px] font-mono text-brand-muted font-semibold">Official College UPI</span>
+              <span className="text-[10px] sm:text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
                 Live Dynamic VPA
               </span>
             </div>
 
             {/* Dynamic QR Code Card */}
-            <div className="p-4 rounded-2xl bg-white flex flex-col items-center justify-center shadow-xl mx-auto max-w-[240px]">
+            <div className="p-3 sm:p-4 rounded-2xl bg-white flex flex-col items-center justify-center shadow-xl mx-auto max-w-[210px] sm:max-w-[240px]">
               <QRCodeSVG
                 value={upiIntentUrl}
-                size={200}
+                size={180}
                 level="H"
                 includeMargin={false}
-                imageSettings={{
-                  src: "/favicon.svg",
-                  x: undefined,
-                  y: undefined,
-                  height: 36,
-                  width: 36,
-                  excavate: true,
-                }}
               />
-              <span className="text-[10px] text-gray-500 font-mono mt-2 font-bold tracking-wider">
-                SCAN WITH GOOGLE PAY / PHONEPE / PAYTM
+              <span className="text-[9px] sm:text-[10px] text-gray-500 font-mono mt-2 font-bold tracking-wider">
+                SCAN WITH GPAY / PHONEPE / PAYTM
               </span>
             </div>
 
             {/* Total Fee Callout */}
-            <div className="mt-5 p-3 rounded-xl bg-brand-surface border border-brand-border">
-              <p className="text-xs text-brand-muted">Exact Settlement Amount:</p>
-              <p className="text-2xl font-mono font-extrabold text-brand-cyan">
+            <div className="mt-4 p-3 rounded-xl bg-brand-surface border border-brand-border">
+              <p className="text-[11px] text-brand-muted">Exact Settlement Amount:</p>
+              <p className="text-xl sm:text-2xl font-mono font-extrabold text-brand-cyan">
                 ₹{totalAmount}.00
               </p>
               <p className="text-[10px] text-brand-muted mt-0.5">Zero Convenience Fees</p>
@@ -232,38 +217,38 @@ export const Payment: React.FC = () => {
           </div>
 
           {/* VPA Copy Box */}
-          <div className="w-full space-y-2">
-            <p className="text-xs text-brand-muted font-semibold text-left">Or Pay Direct to UPI ID:</p>
-            <div className="flex items-center justify-between p-3 rounded-xl bg-black/50 border border-brand-border/80 text-xs">
-              <span className="font-mono text-white select-all font-medium truncate">
+          <div className="w-full space-y-1.5">
+            <p className="text-[11px] text-brand-muted font-semibold text-left">Or Pay Direct to UPI ID:</p>
+            <div className="flex items-center justify-between p-2.5 sm:p-3 rounded-xl bg-black/50 border border-brand-border/80 text-xs">
+              <span className="font-mono text-white select-all font-medium truncate text-xs sm:text-sm">
                 {collegeVpa}
               </span>
               <button
                 type="button"
                 onClick={handleCopyVpa}
-                className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-brand-indigo/20 hover:bg-brand-indigo/40 text-brand-cyan transition-colors shrink-0 ml-2"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-indigo/20 hover:bg-brand-indigo/40 text-brand-cyan transition-colors shrink-0 ml-2"
               >
                 {copiedVpa ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span className="text-[11px] font-bold">{copiedVpa ? 'Copied!' : 'Copy VPA'}</span>
+                <span className="text-[10px] sm:text-[11px] font-bold">{copiedVpa ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-[11px] text-brand-muted font-mono">
+          <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-brand-muted font-mono">
             <Lock className="w-3.5 h-3.5 text-brand-indigo" />
             <span>Encrypted NPCI UPI Standard</span>
           </div>
 
         </div>
 
-        {/* Right Column: 12-Digit UTR Input & GCS Screenshot Upload (7 cols) */}
-        <div className="md:col-span-7 glass-panel rounded-3xl p-6 sm:p-8 border border-brand-border/80">
+        {/* Right Column: 12-Digit UTR Input & GCS Screenshot Upload */}
+        <div className="lg:col-span-7 glass-panel rounded-3xl p-5 sm:p-8 border border-brand-border/80">
           
-          <form onSubmit={handleSubmitPayment} className="space-y-6">
+          <form onSubmit={handleSubmitPayment} className="space-y-5 sm:space-y-6">
             
             <div>
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-brand-indigoLight" />
+              <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-brand-indigoLight" />
                 <span>Verification Details</span>
               </h3>
               <p className="text-xs text-brand-muted mt-1">
@@ -273,7 +258,7 @@ export const Payment: React.FC = () => {
 
             {/* Error Message Alert */}
             {errorMessage && (
-              <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/40 text-rose-300 text-xs flex items-start gap-2.5 animate-shake">
+              <div className="p-3.5 sm:p-4 rounded-xl bg-rose-500/10 border border-rose-500/40 text-rose-300 text-xs flex items-start gap-2.5 animate-shake">
                 <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
                 <span>{errorMessage}</span>
               </div>
@@ -282,10 +267,10 @@ export const Payment: React.FC = () => {
             {/* 12-Digit UTR Field */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-white font-mono uppercase tracking-wide">
+                <label className="text-[11px] sm:text-xs font-bold text-white font-mono uppercase tracking-wide">
                   12-Digit UPI Transaction ID (UTR) *
                 </label>
-                <span className="text-[11px] font-mono text-brand-muted">
+                <span className="text-[10px] sm:text-[11px] font-mono text-brand-muted">
                   {upiRefId.length}/12 Digits
                 </span>
               </div>
@@ -293,30 +278,29 @@ export const Payment: React.FC = () => {
                 type="text"
                 value={upiRefId}
                 onChange={e => {
-                  // Only allow digits and max 12 chars
                   const val = e.target.value.replace(/\D/g, '').slice(0, 12);
                   setUpiRefId(val);
                 }}
                 placeholder="e.g. 426819203814"
                 maxLength={12}
-                className="w-full px-4 py-3 bg-brand-surface rounded-xl border border-brand-border focus:border-brand-indigo focus:outline-none font-mono text-sm tracking-widest text-white placeholder-brand-muted"
+                className="w-full px-4 py-3 bg-brand-surface rounded-xl border border-brand-border focus:border-brand-indigo focus:outline-none font-mono text-xs sm:text-sm tracking-widest text-white placeholder-brand-muted"
                 required
               />
               <p className="text-[10px] text-brand-muted mt-1.5">
-                Find this 12-digit numeric reference in your Google Pay / PhonePe / Paytm transaction receipt (labeled UTR / UPI Ref No.).
+                Find this 12-digit numeric reference in your UPI app receipt (labeled UTR / UPI Ref No.).
               </p>
             </div>
 
             {/* GCS Screenshot Uploader */}
             <div>
-              <label className="block text-xs font-bold text-white font-mono uppercase tracking-wide mb-1.5">
-                Upload Payment Proof Screenshot (GCS Integrated) *
+              <label className="block text-[11px] sm:text-xs font-bold text-white font-mono uppercase tracking-wide mb-1.5">
+                Upload Payment Proof Screenshot (GCS) *
               </label>
 
               <div
                 onDragOver={e => e.preventDefault()}
                 onDrop={handleDrop}
-                className="relative border-2 border-dashed border-brand-border/80 hover:border-brand-indigo/60 rounded-2xl p-6 text-center transition-all bg-black/20 cursor-pointer"
+                className="relative border-2 border-dashed border-brand-border/80 hover:border-brand-indigo/60 rounded-2xl p-4 sm:p-6 text-center transition-all bg-black/20 cursor-pointer"
               >
                 <input
                   type="file"
@@ -326,29 +310,29 @@ export const Payment: React.FC = () => {
                 />
 
                 {previewUrl ? (
-                  <div className="space-y-3">
+                  <div className="space-y-2.5">
                     <img 
                       src={previewUrl} 
                       alt="Screenshot Preview" 
-                      className="max-h-36 mx-auto rounded-lg object-contain border border-brand-border shadow-md" 
+                      className="max-h-32 sm:max-h-40 mx-auto rounded-lg object-contain border border-brand-border shadow-md" 
                     />
                     <div className="flex items-center justify-center gap-2 text-xs text-brand-cyan">
-                      <FileImage className="w-4 h-4" />
-                      <span className="font-mono">{selectedFile?.name}</span>
-                      <span className="text-brand-muted font-mono">({Math.round((selectedFile?.size || 0) / 1024)} KB)</span>
+                      <FileImage className="w-4 h-4 shrink-0" />
+                      <span className="font-mono truncate max-w-[180px]">{selectedFile?.name}</span>
+                      <span className="text-brand-muted font-mono shrink-0">({Math.round((selectedFile?.size || 0) / 1024)} KB)</span>
                     </div>
                     <span className="text-[10px] text-brand-muted underline">Click or drag to replace screenshot</span>
                   </div>
                 ) : (
-                  <div className="space-y-2 py-2">
-                    <div className="w-12 h-12 rounded-2xl bg-brand-surface border border-brand-border flex items-center justify-center mx-auto text-brand-cyan">
-                      <UploadCloud className="w-6 h-6" />
+                  <div className="space-y-2 py-1 sm:py-2">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-brand-surface border border-brand-border flex items-center justify-center mx-auto text-brand-cyan">
+                      <UploadCloud className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
                     <p className="text-xs font-semibold text-white">
-                      Drag & Drop payment screenshot here, or <span className="text-brand-cyan underline">browse</span>
+                      Drag & Drop payment screenshot, or <span className="text-brand-cyan underline">browse</span>
                     </p>
                     <p className="text-[10px] text-brand-muted">
-                      Supports PNG, JPEG, WebP up to 10 MB (Direct GCS V4 Signed Upload)
+                      Supports PNG, JPEG, WebP up to 10 MB (Direct GCS Signed Upload)
                     </p>
                   </div>
                 )}
@@ -359,7 +343,7 @@ export const Payment: React.FC = () => {
             {isSubmitting && (
               <div className="p-3 rounded-xl bg-brand-indigo/15 border border-brand-indigo/30 flex items-center gap-3 text-xs text-brand-cyan">
                 <Loader2 className="w-4 h-4 animate-spin text-brand-cyan shrink-0" />
-                <span>{uploadStatusText || 'Communicating with backend...'}</span>
+                <span className="truncate">{uploadStatusText || 'Communicating with backend...'}</span>
               </div>
             )}
 
@@ -367,7 +351,7 @@ export const Payment: React.FC = () => {
             <button
               type="submit"
               disabled={isSubmitting || upiRefId.length !== 12 || !selectedFile}
-              className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl text-sm font-bold text-white bg-gradient-brand shadow-glow-indigo hover:scale-[1.01] active:scale-95 disabled:opacity-50 disabled:pointer-events-none transition-all"
+              className="w-full flex items-center justify-center gap-2 py-3.5 sm:py-4 px-6 rounded-2xl text-xs sm:text-sm font-bold text-white bg-gradient-brand shadow-glow-indigo hover:scale-[1.01] active:scale-95 disabled:opacity-50 disabled:pointer-events-none transition-all"
             >
               {isSubmitting ? (
                 <>
@@ -383,8 +367,8 @@ export const Payment: React.FC = () => {
               )}
             </button>
 
-            <div className="flex items-center justify-center gap-2 text-[11px] text-brand-muted text-center pt-2">
-              <Lock className="w-3 h-3 text-emerald-400" />
+            <div className="flex items-center justify-center gap-2 text-[10px] text-brand-muted text-center pt-1">
+              <Lock className="w-3 h-3 text-emerald-400 shrink-0" />
               <span>Direct GCS Upload • Unique 12-Digit Duplicate Verification</span>
             </div>
 
