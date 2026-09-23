@@ -1,17 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Mail, Phone, ExternalLink, ShieldCheck } from 'lucide-react';
+import { MapPin, Mail, Phone, ShieldCheck } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
     <footer className="w-full bg-brand-surface/90 border-t border-brand-border/60 text-brand-muted text-sm pt-14 pb-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+      <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
           
           {/* Col 1: Brand & Institution */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-gradient-brand p-0.5">
+              <div className="w-9 h-9 rounded-lg bg-gradient-brand p-0.5 shrink-0">
                 <div className="w-full h-full bg-brand-dark rounded-[6px] flex items-center justify-center font-mono font-bold text-brand-cyan text-sm">
                   ES
                 </div>
@@ -24,7 +24,7 @@ export const Footer: React.FC = () => {
               National Level Inter-Collegiate Technical & Cultural Symposium organized by Erode Sengunthar Engineering College. Unleash your innovation and creativity.
             </p>
             <div className="flex items-center gap-2 text-xs text-emerald-400 font-mono">
-              <ShieldCheck className="w-4 h-4" />
+              <ShieldCheck className="w-4 h-4 shrink-0" />
               <span>Verified AICTE & NAAC 'A' Accredited</span>
             </div>
           </div>
@@ -63,7 +63,7 @@ export const Footer: React.FC = () => {
           {/* Col 4: Contact & Venue */}
           <div className="space-y-3">
             <h4 className="text-white text-xs font-bold uppercase tracking-wider font-mono">Venue & Helpdesk</h4>
-            <div className="space-y-2 text-xs">
+            <div className="space-y-2.5 text-xs">
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-brand-indigo mt-0.5 shrink-0" />
                 <span>Erode Sengunthar Engineering College, Thudupathi, Perundurai, Erode - 638057</span>

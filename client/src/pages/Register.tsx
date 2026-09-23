@@ -118,19 +118,19 @@ export const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-8">
+    <div className="w-full min-h-screen py-8 sm:py-14 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1500px] mx-auto space-y-8 flex-1 flex flex-col justify-center">
       
       {/* Page Title */}
-      <div className="text-center max-w-2xl mx-auto">
+      <div className="text-center max-w-3xl mx-auto">
         <Badge variant="cyan" size="sm" className="mb-2">SYMPOSIUM ONBOARDING</Badge>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white">Event Registration Wizard</h1>
-        <p className="text-xs sm:text-sm text-brand-muted mt-1">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-white">Event Registration Wizard</h1>
+        <p className="text-xs sm:text-base text-brand-muted mt-1.5">
           Follow the 3 steps to configure your role, select constraint-compliant events, and finalize entry.
         </p>
       </div>
 
       {/* Step Progress Bar */}
-      <div className="glass-panel p-4 rounded-2xl border border-brand-border/70">
+      <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-brand-border/70 w-full">
         <div className="flex items-center justify-between max-w-2xl mx-auto">
           
           {/* Step 1 */}

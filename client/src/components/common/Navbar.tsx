@@ -35,8 +35,8 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full glass-panel border-b border-brand-border/60 backdrop-blur-xl transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4">
+      <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+        <div className="flex items-center justify-between h-16 sm:h-20 gap-3 sm:gap-6">
           
           {/* Brand Logo & College Identity */}
           <Link to="/" className="flex items-center gap-2.5 sm:gap-3.5 group shrink-0">
@@ -49,7 +49,7 @@ export const Navbar: React.FC = () => {
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5 sm:gap-2">
-                <span className="font-extrabold tracking-tight text-base sm:text-lg text-white font-sans whitespace-nowrap">
+                <span className="font-extrabold tracking-tight text-base sm:text-lg lg:text-xl text-white font-sans whitespace-nowrap">
                   ESEC <span className="text-gradient">FIESTA</span>
                 </span>
                 <span className="px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-mono font-bold bg-brand-indigo/20 text-brand-cyan rounded-full border border-brand-indigo/40">
@@ -63,7 +63,7 @@ export const Navbar: React.FC = () => {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5">
+          <nav className="hidden lg:flex items-center gap-1.5 xl:gap-2 2xl:gap-3">
             {navLinks.map((link) => {
               const Icon = link.icon;
               const active = isActive(link.path);
@@ -71,7 +71,7 @@ export const Navbar: React.FC = () => {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`relative flex items-center gap-1.5 px-3 py-1.5 xl:px-3.5 xl:py-2 rounded-lg text-xs xl:text-sm font-medium transition-all ${
+                  className={`relative flex items-center gap-2 px-3 py-1.5 xl:px-4 xl:py-2 rounded-xl text-xs xl:text-sm font-medium transition-all ${
                     active 
                       ? 'text-white bg-white/10 shadow-sm border border-white/10' 
                       : 'text-brand-muted hover:text-white hover:bg-white/5'
@@ -90,9 +90,9 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Right Section: Participant UID & Register CTA */}
-          <div className="hidden md:flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="hidden md:flex items-center gap-2 sm:gap-3.5 shrink-0">
             {profile && (
-              <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-brand-surface border border-brand-border text-xs">
+              <div className="hidden xl:flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-brand-surface border border-brand-border text-xs">
                 <UserCheck className="w-3.5 h-3.5 text-brand-cyan shrink-0" />
                 <span className="text-brand-muted">UID:</span>
                 <span className="font-mono font-bold text-white tracking-wider">
@@ -103,7 +103,7 @@ export const Navbar: React.FC = () => {
 
             <Link
               to="/register"
-              className="flex items-center gap-1.5 sm:gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-white bg-gradient-brand hover:opacity-95 shadow-glow-indigo transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
+              className="flex items-center gap-1.5 sm:gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-white bg-gradient-brand hover:opacity-95 shadow-glow-indigo transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
             >
               <span>{itemCount > 0 ? `Checkout (₹${cartTotal})` : 'Register Now'}</span>
               <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />

@@ -15,9 +15,9 @@ export const App: React.FC = () => {
     <BrowserRouter>
       <AuthProvider>
         <RegistrationProvider>
-          <div className="flex flex-col min-h-screen bg-brand-dark text-white selection:bg-brand-indigo selection:text-white">
+          <div className="flex flex-col min-h-screen w-full bg-brand-dark text-white selection:bg-brand-indigo selection:text-white overflow-x-hidden">
             <Navbar />
-            <main className="flex-grow">
+            <main className="flex-1 w-full flex flex-col">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/events" element={<Events />} />

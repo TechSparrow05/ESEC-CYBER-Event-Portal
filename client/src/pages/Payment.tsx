@@ -168,19 +168,19 @@ export const Payment: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen py-8 sm:py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-6 sm:space-y-8 animate-fadeIn">
+    <div className="w-full min-h-screen py-8 sm:py-14 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1600px] mx-auto space-y-8 flex-1 flex flex-col justify-center animate-fadeIn">
       
       {/* Header */}
-      <div className="text-center max-w-2xl mx-auto">
+      <div className="text-center max-w-3xl mx-auto">
         <Badge variant="cyan" size="sm" className="mb-2">PAYMENT GATEWAY</Badge>
-        <h1 className="text-2xl sm:text-4xl font-extrabold text-white">UPI Settlement & Verification</h1>
-        <p className="text-xs sm:text-sm text-brand-muted mt-1 px-2">
+        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white">UPI Settlement & Verification</h1>
+        <p className="text-xs sm:text-base text-brand-muted mt-1.5 px-2">
           Scan the college dynamic UPI QR code, submit your 12-digit UTR, and upload the proof screenshot for instant automated clearance.
         </p>
       </div>
 
       {/* Main Grid: Screen-adaptive flex/grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-12 items-stretch">
         
         {/* Left Column: QR Code & VPA Box */}
         <div className="lg:col-span-5 glass-panel rounded-3xl p-5 sm:p-6 border border-brand-border/80 flex flex-col items-center text-center justify-between space-y-5 sm:space-y-6">
