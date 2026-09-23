@@ -1,5 +1,6 @@
 -- Supabase Schema Migration: College Event Portal (ESEC)
 -- Schema initialization: Auth, Profiles, Sequential Participant UID, Events, Teams, Registrations, Payments & RLS
+-- Idempotent script: Safe to execute multiple times in Supabase SQL Editor
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -31,6 +32,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS tr_set_participant_id ON public.profiles;
 CREATE TRIGGER tr_set_participant_id
 BEFORE INSERT ON public.profiles
 FOR EACH ROW
@@ -118,6 +120,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS tr_check_registration_categories ON public.registrations;
 CREATE TRIGGER tr_check_registration_categories
 BEFORE INSERT OR UPDATE ON public.registrations
 FOR EACH ROW
@@ -150,6 +153,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS tr_sync_payment_status ON public.payments;
 CREATE TRIGGER tr_sync_payment_status
 AFTER INSERT OR UPDATE ON public.payments
 FOR EACH ROW
@@ -163,29 +167,49 @@ ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.registrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
 
--- Profiles: Users can read and update their own profile; anyone authenticated can read basic profile info
+-- Profiles Policies
+DROP POLICY IF EXISTS "Public profiles are viewable by everyone" ON public.profiles;
 CREATE POLICY "Public profiles are viewable by everyone" ON public.profiles FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Users can insert own profile" ON public.profiles;
 CREATE POLICY "Users can insert own profile" ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
 CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
 
--- Events: Viewable by everyone
+-- Events Policies
+DROP POLICY IF EXISTS "Events viewable by everyone" ON public.events;
 CREATE POLICY "Events viewable by everyone" ON public.events FOR SELECT USING (is_active = true);
 
--- Teams: Viewable by authenticated users, insertable by team leader
+-- Teams Policies
+DROP POLICY IF EXISTS "Teams viewable by authenticated users" ON public.teams;
 CREATE POLICY "Teams viewable by authenticated users" ON public.teams FOR SELECT TO authenticated USING (true);
+
+DROP POLICY IF EXISTS "Leaders can create teams" ON public.teams;
 CREATE POLICY "Leaders can create teams" ON public.teams FOR INSERT TO authenticated WITH CHECK (auth.uid() = leader_id);
 
--- Team Members: Viewable by team members
+-- Team Members Policies
+DROP POLICY IF EXISTS "Team members viewable" ON public.team_members;
 CREATE POLICY "Team members viewable" ON public.team_members FOR SELECT TO authenticated USING (true);
+
+DROP POLICY IF EXISTS "Users can join team" ON public.team_members;
 CREATE POLICY "Users can join team" ON public.team_members FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
 
--- Registrations: Users can only see & manage their own registrations
+-- Registrations Policies
+DROP POLICY IF EXISTS "Users can view own registrations" ON public.registrations;
 CREATE POLICY "Users can view own registrations" ON public.registrations FOR SELECT TO authenticated USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can create own registrations" ON public.registrations;
 CREATE POLICY "Users can create own registrations" ON public.registrations FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can update own registrations" ON public.registrations;
 CREATE POLICY "Users can update own registrations" ON public.registrations FOR UPDATE TO authenticated USING (auth.uid() = user_id);
 
--- Payments: Users can see own payments
+-- Payments Policies
+DROP POLICY IF EXISTS "Users can view own payments" ON public.payments;
 CREATE POLICY "Users can view own payments" ON public.payments FOR SELECT TO authenticated USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can submit own payments" ON public.payments;
 CREATE POLICY "Users can submit own payments" ON public.payments FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
 
 -- 9. SEED EVENT DATA (ESEC College Tech & Cultural Fest 2026)
